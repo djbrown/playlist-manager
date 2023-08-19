@@ -4,6 +4,9 @@
         "ms-python.vscode-pylance",
         "ms-python.isort",
         "batisteo.vscode-django",
-        "monosans.djlint"
+        "monosans.djlint",
+        "redhat.vscode-yaml",
+        "tamasfe.even-better-toml",
+        "ms-python.black-formatter"
     ]
 }

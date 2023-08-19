@@ -4,7 +4,6 @@ version = "0.1.0"
 description = ""
 authors = ["Daniel Brown <djbrown@users.noreply.github.com>"]
 readme = "README.md"
-packages = [{include = "playlist_manager"}]
 
 [tool.poetry.dependencies]
 python = "^3.11"

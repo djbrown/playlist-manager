@@ -1,0 +1,9 @@
+{% include "deezer/header.html" %}
+<h1>Playlists</h1>
+<ul>
+    {% for playlist in playlists %}
+        <li>
+            <a href="{{ playlist.link }}">{{ playlist.title }}</a>
+        </li>
+    {% endfor %}
+</ul>

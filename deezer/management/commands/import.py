@@ -12,36 +12,38 @@ class Command(BaseCommand):
         params = {"access_token": options["token"], "limit": "100"}
 
         playlists_link = "https://api.deezer.com/user/me/playlists"
-        playlists_response: dict = requests.get(playlists_link, params).json()
+        playlists_response: dict = requests.get(playlists_link, params, timeout=5)
+        playlists_json = playlists_response.json()
 
-        if "error" in playlists_response:
-            raise CommandError(playlists_response["error"])
+        if "error" in playlists_json:
+            raise CommandError(playlists_json["error"])
 
-        total = playlists_response["total"]
+        total = playlists_json["total"]
         self.stdout.write(f"Importing {total} Playlists ", ending="")
 
-        for p in playlists_response["data"]:
-            playlist_link = p["link"]
+        for p_json in playlists_json["data"]:
+            playlist_link = p_json["link"]
             (playlist, _) = Playlist.objects.update_or_create(
                 link=playlist_link,
                 defaults={
-                    "title": p["title"],
+                    "title": p_json["title"],
                     "link": playlist_link,
                 },
             )
 
             self.stdout.write(".", ending="")
 
-            tracks_link = p["tracklist"]
-            tracks_response = requests.get(tracks_link, params).json()
+            tracks_link = p_json["tracklist"]
+            tracks_response = requests.get(tracks_link, params, timeout=5)
+            tracks_json = tracks_response.json()
 
             tracks: list[Track] = []
-            for t in tracks_response["data"]:
-                track_link = t["link"]
+            for track_json in tracks_json["data"]:
+                track_link = track_json["link"]
                 (track, _) = Track.objects.update_or_create(
                     link=track_link,
                     defaults={
-                        "title": t["title"],
+                        "title": track_json["title"],
                         "link": track_link,
                     },
                 )

@@ -21,21 +21,21 @@ def login(request: HttpRequest):
 def callback(request: HttpRequest):
     code = request.GET.get("code")
 
-    token_response = requests.get(
-        "https://connect.deezer.com/oauth/access_token.php",
-        params={
-            "app_id": settings.DEEZER_APP_ID,
-            "secret": settings.DEEZER_SECRET_KEY,
-            "code": code,
-            "output": "json",
-        },
-    ).json()
+    params = {
+        "app_id": settings.DEEZER_APP_ID,
+        "secret": settings.DEEZER_SECRET_KEY,
+        "code": code,
+        "output": "json",
+    }
+    token_link = ("https://connect.deezer.com/oauth/access_token.php",)
+    token_response = requests.get(token_link, params, timeout=5)
+    token_json = token_response.json()
 
     response = HttpResponseRedirect("/deezer/")
     response.set_cookie(
         "deezer_access_token",
-        token_response["access_token"],
-        max_age=token_response["expires"],
+        token_json["access_token"],
+        max_age=token_json["expires"],
     )
     return response
 

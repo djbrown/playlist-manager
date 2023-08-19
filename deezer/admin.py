@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from deezer.models import Playlist, Track
+
+
+admin.site.register(Playlist)
+admin.site.register(Track)

@@ -15,7 +15,21 @@ black = "^23.3.0"
 pylint = "^2.17.4"
 mypy = "^1.3.0"
 djlint = "^1.32.1"
+pylint-django = "^2.5.3"
 
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
+
+[tool.pylint]
+disable = """
+    missing-module-docstring,
+    missing-class-docstring,
+    missing-function-docstring,
+"""
+ignore = ["manage.py"]
+ignore-paths = [".*/migrations"]
+load-plugins = "pylint_django"
+
+[tool.pyright]
+reportMissingModuleSource = false

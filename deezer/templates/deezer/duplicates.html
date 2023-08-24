@@ -1,0 +1,16 @@
+{% include "deezer/header.html" %}
+<h1>Duplicates</h1>
+<ul>
+    {% for track in tracks %}
+        <li>
+            <a href="{{ track.link }}">{{ track.title }}</a>
+            <ul>
+                {% for playlist in track.playlist_set.all %}
+                    <li>
+                        <a href="{{ playlist.link }}">{{ playlist.title }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+        </li>
+    {% endfor %}
+</ul>

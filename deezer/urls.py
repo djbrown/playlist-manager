@@ -7,4 +7,5 @@ urlpatterns = [
     path("login/", views.login, name="login"),
     path("callback/", views.callback, name="callback"),
     path("playlists/", views.playlists, name="playlists"),
+    path("duplicates/", views.duplicates, name="duplicates"),
 ]

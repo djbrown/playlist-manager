@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Count
 
 
 class Track(models.Model):
@@ -16,3 +17,9 @@ class Playlist(models.Model):
 
     def __str__(self) -> str:
         return self.title
+
+
+def find_multiplaylist_tracks() -> list[Track]:
+    return Track.objects.annotate(playlist_count=Count("playlist")).filter(
+        playlist_count__gt=1
+    )

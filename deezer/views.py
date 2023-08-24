@@ -1,10 +1,9 @@
 import requests
 from django.conf import settings
-from django.db.models import Count
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
 
-from deezer.models import Playlist, Track
+from deezer.models import Playlist, Track, find_multiplaylist_tracks
 
 
 def index(request):
@@ -47,8 +46,6 @@ def playlists(request: HttpRequest):
 
 
 def duplicates(request: HttpRequest):
-    tracks = Track.objects.annotate(playlist_count=Count("playlist")).filter(
-        playlist_count__gt=1
-    )
+    tracks = find_multiplaylist_tracks()
     context = {"tracks": tracks}
     return render(request, "deezer/duplicates.html", context)

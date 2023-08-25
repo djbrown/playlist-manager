@@ -27,7 +27,7 @@ def callback(request: HttpRequest):
         "code": code,
         "output": "json",
     }
-    token_link = ("https://connect.deezer.com/oauth/access_token.php",)
+    token_link = "https://connect.deezer.com/oauth/access_token.php"
     token_response = requests.get(token_link, params, timeout=5)
     token_json = token_response.json()
 

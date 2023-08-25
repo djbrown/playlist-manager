@@ -20,6 +20,8 @@ class Playlist(models.Model):
 
 
 def find_multiplaylist_tracks() -> list[Track]:
-    return Track.objects.annotate(playlist_count=Count("playlist")).filter(
-        playlist_count__gt=1
+    return list(
+        Track.objects.annotate(playlist_count=Count("playlist")).filter(
+            playlist_count__gt=1
+        )
     )

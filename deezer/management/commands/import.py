@@ -8,47 +8,48 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("token")
 
-    def handle(self, *_, **options):
+    def handle(self, *_, **options) -> None:
         params = {"access_token": options["token"], "limit": "100"}
-
         playlists_link = "https://api.deezer.com/user/me/playlists"
-        playlists_response: dict = requests.get(playlists_link, params, timeout=5)
-        playlists_json = playlists_response.json()
+        response_json: dict = get(playlists_link, params)
 
-        if "error" in playlists_json:
-            raise CommandError(playlists_json["error"])
+        if "error" in response_json:
+            raise CommandError(response_json["error"])
 
-        total = playlists_json["total"]
+        total = response_json["total"]
         self.stdout.write(f"Importing {total} Playlists ", ending="")
 
-        for p_json in playlists_json["data"]:
-            playlist_link = p_json["link"]
-            (playlist, _) = Playlist.objects.update_or_create(
-                link=playlist_link,
-                defaults={
-                    "title": p_json["title"],
-                    "link": playlist_link,
-                },
-            )
-
+        for playlist_json in response_json["data"]:
+            playlist = parse_playlist(playlist_json)
             self.stdout.write(".", ending="")
 
-            tracks_link = p_json["tracklist"]
-            tracks_response = requests.get(tracks_link, params, timeout=5)
-            tracks_json = tracks_response.json()
+            tracklist_link = playlist_json["tracklist"]
+            tracks_json = get(tracklist_link, params)
 
             tracks: list[Track] = []
             for track_json in tracks_json["data"]:
-                track_link = track_json["link"]
-                (track, _) = Track.objects.update_or_create(
-                    link=track_link,
-                    defaults={
-                        "title": track_json["title"],
-                        "link": track_link,
-                    },
-                )
+                track = parse_track(track_json)
                 tracks.append(track)
             playlist.tracks.set(tracks)
 
         self.stdout.write("")
         self.stdout.write("========DONE========")
+
+
+def get(link: str, params: dict) -> dict:
+    response = requests.get(link, params, timeout=5)
+    return response.json()
+
+
+def parse_playlist(json: dict) -> Playlist:
+    link = json["link"]
+    title = json["title"]
+    defaults = {"title": title, "link": link}
+    return Playlist.objects.update_or_create(link=link, defaults=defaults)[0]
+
+
+def parse_track(json: dict) -> Track:
+    link = json["link"]
+    title = json["title"]
+    defaults = {"title": title, "link": link}
+    return Track.objects.update_or_create(link=link, defaults=defaults)[0]

@@ -3,7 +3,7 @@ from django.conf import settings
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import render
 
-from deezer.models import Playlist, Track, find_multiplaylist_tracks
+from deezer.models import Playlist, find_multiplaylist_tracks
 
 
 def index(request):

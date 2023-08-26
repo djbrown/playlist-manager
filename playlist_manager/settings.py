@@ -122,3 +122,14 @@ STATIC_URL = "static/"
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+
+# Custom settings
+
+DEEZER_APP_ID: str
+
+DEEZER_SECRET_KEY: str
+
+DEEZER_CALLBACK_URL: str
+
+DEEZER_ACCESS_TOKEN: str
